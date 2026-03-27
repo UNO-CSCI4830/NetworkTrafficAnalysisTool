@@ -17,10 +17,10 @@ network-analysis-tool/
 ├── README.md
 ├── main.py
 ├── data/
-│   ├── mock_connections.json
 │   ├── known_ports.json
 │   └── known_processes.json
 └── src/
+    ├── collector.py
     ├── enrichment.py
     ├── risk_scorer.py
     ├── summary.py
@@ -29,10 +29,10 @@ network-analysis-tool/
 
 | File | What it does |
 |------|-------------|
-| `main.py` | CLI entry point which loads data, runs the pipeline, and writes output |
-| `data/mock_connections.json` | Simulated network connections (replaces live capture for now) |
+| `main.py` | CLI entry point which runs the pipeline and writes output |
 | `data/known_ports.json` | Port → service name/description lookup |
-| `data/known_processes.json` | Whitelist of known-good Windows processes |
+| `data/known_processes.json` | Whitelist of known-good Windows processes and their expected ports |
+| `src/collector.py` | Collects live network connections via psutil and returns normalized dicts |
 | `src/enrichment.py` | Port and process enrichment |
 | `src/risk_scorer.py` | Scores each connection 0–100 based on weighted threat indicators |
 | `src/summary.py` | Generates plain-English descriptions of each connection |
