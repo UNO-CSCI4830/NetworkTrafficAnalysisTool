@@ -8,7 +8,7 @@ A semantic network traffic analysis tool that converts raw connection data into 
 python main.py
 ```
 
-This reads mock network data, runs the analysis pipeline, prints a summary to the terminal, and generates `report.html`.
+This collects live network connections from the machine, runs the analysis pipeline, prints a summary to the terminal, and generates `report.html`.
 
 ## Project Structure
 
@@ -41,7 +41,7 @@ network-analysis-tool/
 ## Pipeline
 
 ```
-Mock Data → Enrichment → Risk Scoring → Summary Generation → HTML Report
+Live Connections via psutil → Enrichment → Risk Scoring → Summary Generation → HTML Report
 ```
 
 ## Team
@@ -58,3 +58,4 @@ Mock Data → Enrichment → Risk Scoring → Summary Generation → HTML Report
 
 ## Requirements
 - Python 3.10+
+- psutil
