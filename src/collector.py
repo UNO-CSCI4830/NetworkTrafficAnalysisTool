@@ -21,6 +21,9 @@ import socket
 from socket import AF_INET, SOCK_STREAM, SOCK_DGRAM
 
 import psutil
+import os
+from pathlib import Path
+
 
 AF_INET6 = getattr(socket, "AF_INET6", object())
 
@@ -79,8 +82,34 @@ def get_connections(kind: str = "inet") -> list[dict]:
 
 if __name__ == "__main__":
     import json
+    from datetime import datetime
+    import shutil
+
 
     conns = get_connections(kind="inet")
     print(f"Found {len(conns)} active connection(s).\n")
-    for c in conns:
-        print(json.dumps(c, indent=2))
+
+    #Until we decide on a permanent place, I will put the logs in the home directory in a folder called netscan_results.
+    path = Path.home() / "netscan_results"
+    #print(path)
+
+    #create the directory if it doesn't exist:
+    Path(path).mkdir(parents=True, exist_ok=True)
+
+    #Set the log directory as hidden in file manager.
+    os.system(f'attrib +h "{path}"')
+
+    #We would like to have it eventually keep track of logs for up to 30 days.
+    #TODO: Add some sort of subroutine that deletes logs when they are a month old.
+    
+    log_path = path / "log-current.txt"
+    #The "w" file permission will overwrite log-current if it exists.
+    with open(log_path, "w") as log_file:   
+        for c in conns:
+            log_file.write(json.dumps(c, indent=2))
+
+    #Make a copy of the log so the next run of collector doesn't overwrite it
+    #I didn't use datetime.now() to get the full time and date because that creates illegal filesystem characters.
+    iso_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    #print("log-" + str(iso_time) + ".txt")
+    shutil.copy(path / "log-current.txt" , path / ("log-" + str(iso_time) + ".txt"))
