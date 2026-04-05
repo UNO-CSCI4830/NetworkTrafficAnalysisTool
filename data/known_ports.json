@@ -22,13 +22,13 @@
   "1194": { "service": "OpenVPN",              "suspicious": false },
   "3306": { "service": "MySQL",                "suspicious": true  },
   "3389": { "service": "RDP",                  "suspicious": true  },
-  "4444": { "service": "Metasploit Default",   "suspicious": true  },
-  "4970": { "service": "Spotify P2P",          "suspicious": false },
+  "4444": { "service": "krb524 / Metasploit Default", "suspicious": true  },
+  "4070": { "service": "Spotify P2P",                "suspicious": false },
   "5900": { "service": "VNC",                  "suspicious": true  },
   "6667": { "service": "IRC",                  "suspicious": true  },
   "8080": { "service": "HTTP Alternate",       "suspicious": false },
   "8333": { "service": "Bitcoin P2P",          "suspicious": true  },
   "8545": { "service": "Ethereum RPC",         "suspicious": true  },
-  "9001": { "service": "Tor",                  "suspicious": true  },
+  "9001": { "service": "etlservicemgr / Tor Relay", "suspicious": true  },
   "9050": { "service": "Tor SOCKS Proxy",      "suspicious": true  }
 }

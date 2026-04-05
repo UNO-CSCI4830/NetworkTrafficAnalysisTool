@@ -15,7 +15,7 @@
   "slack.exe":         { "description": "Slack",                             "expected_ports": [80, 443] },
   "discord.exe":       { "description": "Discord",                           "expected_ports": [80, 443] },
   "zoom.exe":          { "description": "Zoom",                              "expected_ports": [80, 443, 8801, 8802] },
-  "Spotify.exe":       { "description": "Spotify",                           "expected_ports": [80, 443, 4070] },
+  "Spotify.exe":       { "description": "Spotify",                           "expected_ports": [80, 443, 4070, 57621] },
   "steam.exe":         { "description": "Steam game client",                 "expected_ports": [80, 443, 27015, 27036] },
   "outlook.exe":       { "description": "Microsoft Outlook",                 "expected_ports": [80, 443, 993, 995, 587] },
   "thunderbird.exe":   { "description": "Mozilla Thunderbird email client",  "expected_ports": [80, 443, 993, 995, 587] },
