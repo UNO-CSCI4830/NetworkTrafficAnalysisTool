@@ -104,9 +104,11 @@ if __name__ == "__main__":
     
     log_path = path / "log-current.txt"
     #The "w" file permission will overwrite log-current if it exists.
-    with open(log_path, "w") as log_file:   
+    with open(log_path, "w") as log_file:
+        log_file.write("[\n") #make json array so file is valid
         for c in conns:
-            log_file.write(json.dumps(c, indent=2))
+            log_file.write(json.dumps(c, indent=2) + ",")
+        log_file.write("{}]\n") #terminate json array, and create a final empty json structure so we can just put a comma after every json entry and have it be valid.
 
     #Make a copy of the log so the next run of collector doesn't overwrite it
     #I didn't use datetime.now() to get the full time and date because that creates illegal filesystem characters.
