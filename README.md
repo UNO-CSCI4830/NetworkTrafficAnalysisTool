@@ -33,7 +33,7 @@ network-analysis-tool/
 | `data/known_ports.json` | Port → service name/description lookup |
 | `data/known_processes.json` | Whitelist of known-good Windows processes and their expected ports |
 | `src/collector.py` | Collects live network connections via psutil and returns normalized dicts |
-| `src/enrichment.py` | Port and process enrichment |
+| `src/enrichment.py` | Port/process enrichment and DNS/IP owner lookup |
 | `src/risk_scorer.py` | Scores each connection 0–100 based on weighted threat indicators |
 | `src/summary.py` | Generates plain-English descriptions of each connection |
 | `src/report.py` | Builds a self-contained HTML report with color-coded risk table |
@@ -41,7 +41,7 @@ network-analysis-tool/
 ## Pipeline
 
 ```
-Live Connections via psutil → Enrichment → Risk Scoring → Summary Generation → HTML Report
+Live Connections (psutil) → Port/Process Enrichment → DNS Enrichment → Risk Scoring → Summary Generation → HTML Report
 ```
 
 ## Team
@@ -59,3 +59,9 @@ Live Connections via psutil → Enrichment → Risk Scoring → Summary Generati
 ## Requirements
 - Python 3.10+
 - psutil
+- ipwhois
+
+Install dependencies:
+```bash
+pip install -r requirements.txt
+```
