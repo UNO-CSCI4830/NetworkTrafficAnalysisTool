@@ -132,6 +132,30 @@ def reverse_dns_search_dest_ips(log_name):
     return remote_ip_list, remote_ip_owners
 
 
+def enrich_dns(connection: dict) -> dict:
+    """
+    In-memory DNS enrichment for the main.py pipeline.
+    Looks up the organization that owns the remote IP and adds it to the connection dict.
+
+    Adds:
+        dns_owner - organization name from WHOIS/RDAP, or None if lookup fails
+    """
+    from ipwhois import IPWhois
+
+    result = dict(connection)
+    ip = connection.get("remote_ip", "")
+
+    if ip:
+        try:
+            result["dns_owner"] = IPWhois(ip).lookup_rdap()["asn_description"]
+        except Exception:
+            result["dns_owner"] = None
+    else:
+        result["dns_owner"] = None
+
+    return result
+
+
 if __name__ == "__main__":
     enrich_logs()
 
