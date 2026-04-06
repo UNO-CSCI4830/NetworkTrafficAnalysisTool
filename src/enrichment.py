@@ -2,6 +2,7 @@
 import os
 from pathlib import Path
 import json
+from ipwhois import IPWhois
 
 
 def enrich(connection: dict, known_ports: dict, known_processes: dict) -> dict:
@@ -85,8 +86,6 @@ def enrich_logs():
 
     
 def reverse_dns_search_dest_ips(log_name):
-    from ipwhois import IPWhois
-    from pprint import pprint
     import time
     
     remote_ip_list = []
@@ -140,8 +139,6 @@ def enrich_dns(connection: dict) -> dict:
     Adds:
         dns_owner - organization name from WHOIS/RDAP, or None if lookup fails
     """
-    from ipwhois import IPWhois
-
     result = dict(connection)
     ip = connection.get("remote_ip", "")
 
