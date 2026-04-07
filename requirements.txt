@@ -1,2 +1,3 @@
 psutil==7.2.2
 ipwhois
+tqdm==4.67.3
