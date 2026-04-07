@@ -59,9 +59,9 @@ def clearOldestConnections(numConnections = 1000):
 
 
 #Removes specific connection log based off of its ID
-def clearSpecificConnection(ID):
+def clearSpecificConnection(id):
     for connection in connectionsArray:
-        if connection[2] == ID:
+        if connection[2] == id:
             connectionsArray.remove(connection)
 
 def printArrayForUser():
