@@ -64,11 +64,20 @@ def get_connections(kind: str = "inet") -> list[dict]:
         # --- process info ---
         pid          = conn.pid
         process_name = pid_to_name.get(pid, "unknown") if pid is not None else "unknown"
+        
+        # Get process executable path
+        process_path = "unknown"
+        if pid is not None:
+            try:
+                process_path = psutil.Process(pid).exe()
+            except (psutil.NoSuchProcess, psutil.AccessDenied, OSError):
+                process_path = "unknown"
 
         connections.append(
             {
                 "pid":          pid,
                 "process_name": process_name,
+                "process_path": process_path,
                 "local_ip":     local_ip,
                 "local_port":   local_port,
                 "remote_ip":    remote_ip,

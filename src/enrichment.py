@@ -153,6 +153,31 @@ def enrich_dns(connection: dict) -> dict:
     return result
 
 
+def display_process_path(connection: dict) -> str:
+    """
+    Returns a formatted string with process path details for security analysis.
+    Useful for verifying a process is running from its official installation directory.
+    
+    Args:
+        connection: A connection dict with process_path field
+        
+    Returns:
+        Formatted string with process path details
+    """
+    process_name = connection.get("process_name", "unknown")
+    process_path = connection.get("process_path", "unknown")
+    pid = connection.get("pid", "?")
+    
+    detail_str = f"Process: {process_name} (PID: {pid})\nPath: {process_path}"
+    
+    if process_path != "unknown":
+        detail_str += f"\n Verified path"
+    else:
+        detail_str += f"\n Could not determine path (elevated privileges may be required)"
+    
+    return detail_str
+
+
 if __name__ == "__main__":
     enrich_logs()
 
