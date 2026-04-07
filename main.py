@@ -1,8 +1,8 @@
 import json
 
+from src.encryption import load_key
 from src.collector import get_connections
-from src.encryption import encrypt_data, load_key
-from src.enrichment import enrich, enrich_dns
+from src.enrichment import enrich, enrich_dns, display_process_path
 from tqdm import tqdm
 
 # TODO: from src.risk_scorer import score_risk
@@ -28,7 +28,7 @@ def main():
             f"Details: {e}\n"
         )
 
-    # --- load reference data ---
+    # --- load reference data ---2
     known_ports     = load_json("data/known_ports.json")
     known_processes = load_json("data/known_processes.json")
 
@@ -70,6 +70,25 @@ def main():
             f"{' ?' if not r.get('process_known') else ''}"
         )
 
+    # --- (FR17)process path lookup (optional interactive feature) ---
+    print("\n" + "="*80)
+    print("PROCESS FILE PATH LOOKUP - Verify processes are running from official locations")
+    print("="*80)
+    while True:
+        try:
+            user_input = input("\nEnter process name or 'quit' to exit: ").strip()
+            if user_input.lower() == 'quit':
+                break
+            
+            matching = [r for r in results if user_input.lower() in r['process_name'].lower()]
+            if matching:
+                for match in matching:
+                    print(f"\n{display_process_path(match)}")
+            else:
+                print(f"No processes found matching '{user_input}'")
+        except KeyboardInterrupt:
+            print("\nExiting...")
+            break
     # --- encrypted log output ---
     # Turn results into JSON, encrypt them, and save only the encrypted file.
     if encryption_ok:
