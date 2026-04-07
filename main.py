@@ -1,7 +1,8 @@
 import json
 
 from src.collector import get_connections
-from src.enrichment import enrich, enrich_dns
+from src.enrichment import enrich, enrich_dns, display_process_path
+from tqdm import tqdm
 
 # TODO: from src.risk_scorer import score_risk
 # TODO: from src.summary import generate_summary
