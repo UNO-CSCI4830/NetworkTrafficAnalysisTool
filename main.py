@@ -3,6 +3,7 @@ import json
 from src.collector import get_connections
 from src.encryption import encrypt_data, load_key
 from src.enrichment import enrich, enrich_dns
+from tqdm import tqdm
 
 # TODO: from src.risk_scorer import score_risk
 # TODO: from src.summary import generate_summary
@@ -37,23 +38,25 @@ def main():
 
     # --- pipeline ---
     results = []
-    for conn in connections:
-        # step 1: port + process enrichment
-        conn = enrich(conn, known_ports, known_processes)
+    dns_cache = {}
+    with tqdm(total=len(connections), desc="DNS enrichment", unit="conn") as pbar:
+        for conn in connections:
+            # step 1: port + process enrichment
+            conn = enrich(conn, known_ports, known_processes)
 
-        # step 2: dns enrichment
-        conn = enrich_dns(conn)
+            # step 2: dns enrichment
+            conn = enrich_dns(conn, dns_cache, pbar)
 
-        # TODO: step 3: risk scoring
-        # risk = score_risk(conn)
-        # conn["score"]   = risk["score"]
-        # conn["label"]   = risk["label"]
-        # conn["reasons"] = risk["reasons"]
+            # TODO: step 3: risk scoring
+            # risk = score_risk(conn)
+            # conn["score"]   = risk["score"]
+            # conn["label"]   = risk["label"]
+            # conn["reasons"] = risk["reasons"]
 
-        # TODO: step 4: plain-English summary
-        # conn["summary"] = generate_summary(conn)
+            # TODO: step 4: plain-English summary
+            # conn["summary"] = generate_summary(conn)
 
-        results.append(conn)
+            results.append(conn)
 
     # --- terminal output ---
     for r in results:

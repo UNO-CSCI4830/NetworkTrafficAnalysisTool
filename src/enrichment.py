@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 import json
 from ipwhois import IPWhois
-
+from tqdm import tqdm
 
 def enrich(connection: dict, known_ports: dict, known_processes: dict) -> dict:
     """
@@ -131,7 +131,7 @@ def reverse_dns_search_dest_ips(log_name):
     return remote_ip_list, remote_ip_owners
 
 
-def enrich_dns(connection: dict) -> dict:
+def enrich_dns(connection: dict, cache: dict, pbar: tqdm = None) -> dict:
     """
     In-memory DNS enrichment for the main.py pipeline.
     Looks up the organization that owns the remote IP and adds it to the connection dict.
@@ -141,15 +141,18 @@ def enrich_dns(connection: dict) -> dict:
     """
     result = dict(connection)
     ip = connection.get("remote_ip", "")
-
     if ip:
-        try:
-            result["dns_owner"] = IPWhois(ip).lookup_rdap()["asn_description"]
-        except Exception:
-            result["dns_owner"] = None
-    else:
-        result["dns_owner"] = None
-
+        cached = ip in cache
+        if not cached:
+            try:
+                cache[ip] = IPWhois(ip).lookup_rdap()["asn_description"]
+            except Exception:
+                cache[ip] = None
+        result["dns_owner"] = cache[ip]
+        if pbar:
+            pbar.set_postfix_str(f"{ip} {'(cached)' if cached else ''}")
+    if pbar:
+        pbar.update(1)
     return result
 
 
