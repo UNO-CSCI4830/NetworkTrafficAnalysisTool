@@ -2,7 +2,6 @@ import json
 
 from src.collector import get_connections
 from src.enrichment import enrich, enrich_dns
-from tqdm import tqdm
 
 # TODO: from src.risk_scorer import score_risk
 # TODO: from src.summary import generate_summary
@@ -55,6 +54,26 @@ def main():
             f"{' ⚠' if r.get('port_suspicious') else ''}"
             f"{' ?' if not r.get('process_known') else ''}"
         )
+
+    # --- (FR17)process path lookup (optional interactive feature) ---
+    print("\n" + "="*80)
+    print("PROCESS FILE PATH LOOKUP - Verify processes are running from official locations")
+    print("="*80)
+    while True:
+        try:
+            user_input = input("\nEnter process name or 'quit' to exit: ").strip()
+            if user_input.lower() == 'quit':
+                break
+            
+            matching = [r for r in results if user_input.lower() in r['process_name'].lower()]
+            if matching:
+                for match in matching:
+                    print(f"\n{display_process_path(match)}")
+            else:
+                print(f"No processes found matching '{user_input}'")
+        except KeyboardInterrupt:
+            print("\nExiting...")
+            break
 
     # TODO: write report.html in the next sprint
 
