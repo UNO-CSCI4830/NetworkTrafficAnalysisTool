@@ -3,7 +3,7 @@ import main
 
 
 
-todaysDate = datetime.datetime.today
+todaysDate = datetime.datetime.today()
 
 storingPeriod = datetime.timedelta.days(30)
 
@@ -11,17 +11,18 @@ expirationDate = todaysDate - storingPeriod
 
 connectionsArray = []
 
-ID = 0
+id = 0
 
 #This should be run frequently to keep stored list current
 def getConnections():
 
     connections = main.connections
 
-    formattedConnection = [connection, todaysDate, ID++]
-
     for connection in connections:
+        id += 1
+        formattedConnection = [connection, todaysDate, id]
         connectionsArray.append(formattedConnection)
+    
     
 
 
@@ -62,6 +63,12 @@ def clearSpecificConnection(ID):
     for connection in connectionsArray:
         if connection[2] == ID:
             connectionsArray.remove(connection)
+
+def printArrayForUser():
+    for connection in connectionsArray:
+        print(f"Connection: {connection[0]}, Date: {connection[1]}, Unique Connection ID: {connection[2]}")
+
+
         
     
 
