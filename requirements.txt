@@ -1,3 +1,4 @@
 psutil==7.2.2
 ipwhois
+cryptography
 tqdm==4.67.3
