@@ -1,6 +1,6 @@
 import json
 
-from src.encryption import load_key
+from src.encryption import load_key, encrypt_data
 from src.collector import get_connections
 from src.enrichment import enrich, enrich_dns, display_process_path
 from tqdm import tqdm
