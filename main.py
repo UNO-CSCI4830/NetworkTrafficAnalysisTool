@@ -1,6 +1,7 @@
 import json
 
 from src.collector import get_connections
+from src.encryption import encrypt_data, load_key
 from src.enrichment import enrich, enrich_dns
 
 # TODO: from src.risk_scorer import score_risk
@@ -13,6 +14,19 @@ def load_json(path: str) -> dict:
 
 
 def main():
+    # --- encryption initialization ---
+    # If this fails, we skip writing the encrypted log file.
+    encryption_ok = True
+    try:
+        load_key()
+    except Exception as e:
+        encryption_ok = False
+        print(
+            "ERROR: Could not initialize log encryption. "
+            "Skipping log file output.\n"
+            f"Details: {e}\n"
+        )
+
     # --- load reference data ---
     known_ports     = load_json("data/known_ports.json")
     known_processes = load_json("data/known_processes.json")
@@ -52,6 +66,23 @@ def main():
             f"{' ⚠' if r.get('port_suspicious') else ''}"
             f"{' ?' if not r.get('process_known') else ''}"
         )
+
+    # --- encrypted log output ---
+    # Turn results into JSON, encrypt them, and save only the encrypted file.
+    if encryption_ok:
+        try:
+            results_json = json.dumps(results, indent=2).encode("utf-8")
+            encrypted = encrypt_data(results_json)
+            # NOTE: This will overwrite logs.enc every time.
+            # We can change this later if we want to store past logs.
+            with open("logs.enc", "wb") as f:
+                f.write(encrypted)
+            print("\nEncrypted logs saved to logs.enc")
+        except Exception as e:
+            print(
+                "\nERROR: Could not encrypt/save logs. Skipping log write.\n"
+                f"Details: {e}"
+            )
 
     # TODO: write report.html in the next sprint
 
