@@ -5,7 +5,7 @@ from src.collector import get_connections
 from src.enrichment import enrich, enrich_dns, display_process_path
 from tqdm import tqdm
 
-# TODO: from src.risk_scorer import score_risk
+from src.risk_scorer import score_risk
 # TODO: from src.summary import generate_summary
 
 
@@ -47,11 +47,11 @@ def main():
             # step 2: dns enrichment
             conn = enrich_dns(conn, dns_cache, pbar)
 
-            # TODO: step 3: risk scoring
-            # risk = score_risk(conn)
-            # conn["score"]   = risk["score"]
-            # conn["label"]   = risk["label"]
-            # conn["reasons"] = risk["reasons"]
+            # step 3: risk scoring
+            risk = score_risk(conn)
+            conn["score"]   = risk["score"]
+            conn["label"]   = risk["label"]
+            conn["reasons"] = risk["reasons"]
 
             # TODO: step 4: plain-English summary
             # conn["summary"] = generate_summary(conn)
