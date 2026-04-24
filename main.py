@@ -2,7 +2,7 @@ import json
 
 from src.collector import get_connections, write_logs_to_file
 from src.encryption import encrypt_data, load_key
-from src.enrichment import enrich, enrich_dns
+from src.enrichment import enrich, enrich_dns, enrich_logs
 
 # TODO: from src.risk_scorer import score_risk
 # TODO: from src.summary import generate_summary
@@ -73,7 +73,8 @@ def main():
         #if there isn't log encryption, write the unencrypted logs to file.
     if encryption_ok == False:
         #Write the log to file:
-        write_logs_to_file(connections)
+        write_logs_to_file(connections) #write the unenriched log to file (remove this one? Or, should it only run in the place of enrich_logs() if a certain command line flag is set that disables DNS lookup?)
+        enrich_logs() #write the enriched log to file (dns lookup included)
         
     else:
         # --- encrypted log output ---
