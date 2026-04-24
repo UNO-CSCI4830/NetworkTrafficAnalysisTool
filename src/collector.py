@@ -80,15 +80,11 @@ def get_connections(kind: str = "inet") -> list[dict]:
 
     return connections
 
-if __name__ == "__main__":
+def write_logs_to_file(conns):
     import json
     from datetime import datetime
     import shutil
-
-
-    conns = get_connections(kind="inet")
-    print(f"Found {len(conns)} active connection(s).\n")
-
+    
     #Until we decide on a permanent place, I will put the logs in the home directory in a folder called netscan_results.
     path = Path.home() / "netscan_results"
     #print(path)
@@ -115,3 +111,9 @@ if __name__ == "__main__":
     iso_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     #print("log-" + str(iso_time) + ".txt")
     shutil.copy(path / "log-current.txt" , path / ("log-" + str(iso_time) + ".txt"))
+
+
+if __name__ == "__main__":
+    conns = get_connections(kind="inet")
+    print(f"Found {len(conns)} active connection(s).\n")
+    write_logs_to_file(conns)

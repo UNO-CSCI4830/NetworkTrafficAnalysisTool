@@ -1,6 +1,6 @@
 import json
 
-from src.collector import get_connections
+from src.collector import get_connections, write_logs_to_file
 from src.encryption import encrypt_data, load_key
 from src.enrichment import enrich, enrich_dns
 
@@ -40,7 +40,7 @@ def main():
     for conn in connections:
         # step 1: port + process enrichment
         conn = enrich(conn, known_ports, known_processes)
-
+        
         # step 2: dns enrichment
         conn = enrich_dns(conn)
 
@@ -55,6 +55,8 @@ def main():
 
         results.append(conn)
 
+    
+        
     # --- terminal output ---
     for r in results:
         print(
@@ -67,9 +69,15 @@ def main():
             f"{' ?' if not r.get('process_known') else ''}"
         )
 
-    # --- encrypted log output ---
-    # Turn results into JSON, encrypt them, and save only the encrypted file.
-    if encryption_ok:
+
+        #if there isn't log encryption, write the unencrypted logs to file.
+    if encryption_ok == False:
+        #Write the log to file:
+        write_logs_to_file(connections)
+        
+    else:
+        # --- encrypted log output ---
+        # Turn results into JSON, encrypt them, and save only the encrypted file.
         try:
             results_json = json.dumps(results, indent=2).encode("utf-8")
             encrypted = encrypt_data(results_json)
