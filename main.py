@@ -89,6 +89,7 @@ def main():
         except KeyboardInterrupt:
             print("\nExiting...")
             break
+        
     # --- encrypted log output ---
     # Turn results into JSON, encrypt them, and save only the encrypted file.
     if encryption_ok:
