@@ -34,6 +34,12 @@ IV_SIZE = 12  # IV = Initialization Vector
 KEY_SIZE = 32  # 32 bytes = AES-256
 
 
+def is_log_key_set() -> bool:
+    """Return True if the LOG_KEY environment variable is set and non-empty."""
+    key_text = os.getenv("LOG_KEY")
+    return bool(key_text and key_text.strip())
+
+
 def load_key() -> bytes:
     # Load the AES-256 key (32 bytes) from the LOG_KEY environment variable.
     # --- read key text ---
