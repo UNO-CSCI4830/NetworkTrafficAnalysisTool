@@ -27,7 +27,7 @@ def getConnections():
 
 
 #This can be run on the order of once a day
-def checkExpiration(date):
+def checkExpiration():
     for connection in connectionsArray:
         if connection[1] < expirationDate:
             clearSpecificConnection(connection[2])
@@ -48,12 +48,14 @@ def checkSizeConnectionsArray(connectionsArray):
 
 
 def fullyClearConnectionArray():
+    global connectionsArray
     connectionsArray = []
 
 
 #Takes in a certain number as a parameter and removes the oldest connections up to that number of connections.
 def clearOldestConnections(numConnections = 1000):
     for number in numConnections:
+        global connectionsArray
         connectionsArray.pop()
     
 
