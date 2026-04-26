@@ -1,6 +1,6 @@
 import json
 
-from src.encryption import load_key
+from src.encryption import load_key, encrypt_data
 from src.collector import get_connections
 from src.enrichment import enrich, enrich_dns, display_process_path
 from tqdm import tqdm
@@ -43,6 +43,7 @@ def main():
         for conn in connections:
             # step 1: port + process enrichment
             conn = enrich(conn, known_ports, known_processes)
+
 
             # step 2: dns enrichment
             conn = enrich_dns(conn, dns_cache, pbar)
