@@ -32,9 +32,9 @@ SPOOFABLE_PROCESSES = {
 TRUSTED_PATHS = (
     r"c:\windows\system32",
     r"c:\windows\syswow64",
-    r"c:\windows\\",
-    r"c:\program files\\",
-    r"c:\program files (x86)\\",
+    r"c:\windows" + "\\",
+    r"c:\program files" + "\\",
+    r"c:\program files (x86)" + "\\",
 )
 
 
