@@ -6,6 +6,7 @@ from src.enrichment import enrich, enrich_dns, display_process_path
 from tqdm import tqdm
 
 from src.risk_scorer import score_risk
+from src.report import generate_report
 # TODO: from src.summary import generate_summary
 
 
@@ -74,6 +75,10 @@ def main():
             f"{' ?' if not r.get('process_known') else ''}"
             f"{' sha256: ' + r.get('executable_sha256') if r.get('executable_sha256') else None}"
         )
+
+    # --- report ---
+    report_path = generate_report(results)
+    print(f"\nReport saved to {report_path}")
 
     # --- (FR17)process path lookup (optional interactive feature) ---
     print("\n" + "="*80)
