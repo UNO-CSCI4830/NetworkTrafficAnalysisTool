@@ -6,6 +6,7 @@ from src.enrichment import enrich, enrich_dns, display_process_path
 from tqdm import tqdm
 
 from src.risk_scorer import score_risk
+from src.data_transfer_tracker import create_tracker
 # TODO: from src.summary import generate_summary
 
 
@@ -70,6 +71,22 @@ def main():
             f"{' ?' if not r.get('process_known') else ''}"
             f"{' sha256: ' + r.get('executable_sha256') if r.get('executable_sha256') else None}"
         )
+
+    # --- (FR8) Per-Process Data Transfer Tracking ---
+    try:
+        tracker = create_tracker()
+        process_transfer_stats = tracker.aggregate_by_connections(results)
+        print(tracker.display_transfer_summary(process_transfer_stats, sort_by='total_bytes'))
+        
+        # Display top 10 processes by total bytes transferred
+        top_processes = tracker.get_top_processes(process_transfer_stats, limit=10, sort_by='total_bytes')
+        if top_processes:
+            print("\nTOP 10 PROCESSES BY TOTAL DATA TRANSFER:")
+            print("-" * 50)
+            for idx, (process_name, data) in enumerate(top_processes, 1):
+                print(f"{idx:2d}. {process_name:<30} {data['total_bytes']:>12,} bytes")
+    except Exception as e:
+        print(f"Warning: Could not generate data transfer summary: {e}\n")
 
     # --- (FR17)process path lookup (optional interactive feature) ---
     print("\n" + "="*80)
