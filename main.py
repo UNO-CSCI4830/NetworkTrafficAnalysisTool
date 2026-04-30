@@ -3,6 +3,7 @@ import json
 from src.encryption import load_key, encrypt_data
 from src.collector import get_connections
 from src.enrichment import enrich, enrich_dns, display_process_path
+from src.delete_old_logs import delete_old_logs
 from tqdm import tqdm
 
 from src.risk_scorer import score_risk
@@ -15,6 +16,9 @@ def load_json(path: str) -> dict:
 
 
 def main():
+    ## --- delete expired logs (over 1 month old)---
+    delete_old_logs()
+    
     # --- encryption initialization ---
     # If this fails, we skip writing the encrypted log file.
     encryption_ok = True
