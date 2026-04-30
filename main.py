@@ -60,6 +60,10 @@ def main():
 
     # --- terminal output ---
     for r in results:
+        #don't print a connection if it is only to localhost:
+        if (r['remote_ip'] == ''):
+            continue
+        
         print(
             f"[{r.get('label', 'unscored'):>8}] "
             f"{r['process_name']:<20} "
