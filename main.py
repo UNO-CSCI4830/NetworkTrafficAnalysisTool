@@ -9,7 +9,7 @@ from src.risk_scorer import score_risk
 from src.report import generate_report
 from src.data_transfer_tracker import create_tracker
 from tqdm import tqdm
-
+from pathlib import Path
 
 # TODO: from src.summary import generate_summary
 
