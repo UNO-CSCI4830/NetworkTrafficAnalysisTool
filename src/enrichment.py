@@ -4,6 +4,7 @@ from pathlib import Path
 import json
 from ipwhois import IPWhois
 from tqdm import tqdm
+import hashlib
 
 def enrich(connection: dict, known_ports: dict, known_processes: dict) -> dict:
     """
@@ -27,6 +28,14 @@ def enrich(connection: dict, known_ports: dict, known_processes: dict) -> dict:
     result["service_name"]    = port_info.get("service", "Unknown")
     result["port_suspicious"] = port_info.get("suspicious", False)
 
+      # --- sha256 executable_sum ---
+    try:
+        with open(result["process_path"], 'rb') as exe:
+            digest = hashlib.file_digest(exe, "sha256")
+            #print(digest.hexdigest())
+    except:
+        digest = None
+
     # --- process enrichment ---
     proc_info = known_processes.get(process_name)
     if proc_info:
@@ -40,6 +49,11 @@ def enrich(connection: dict, known_ports: dict, known_processes: dict) -> dict:
         result["process_known"]       = False
         result["process_description"] = None
         result["port_mismatch"]       = False
+        try:
+            result["executable_sha256"] = digest.hexdigest()
+        except:
+            result["executable_sha256"] = None
+            
 
     return result
 

@@ -68,6 +68,7 @@ def main():
             f"org={r.get('dns_owner', 'unknown')}"
             f"{' ⚠' if r.get('port_suspicious') else ''}"
             f"{' ?' if not r.get('process_known') else ''}"
+            f"{' sha256: ' + r.get('executable_sha256') if r.get('executable_sha256') else None}"
         )
 
     # --- (FR17)process path lookup (optional interactive feature) ---

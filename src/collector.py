@@ -64,6 +64,7 @@ def get_connections(kind: str = "inet") -> list[dict]:
         # --- process info ---
         pid          = conn.pid
         process_name = pid_to_name.get(pid, "unknown") if pid is not None else "unknown"
+
         
         # Get process executable path
         process_path = "unknown"
