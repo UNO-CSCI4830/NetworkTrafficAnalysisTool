@@ -1,10 +1,13 @@
 import json
+import os
 
 from src.encryption import load_key, encrypt_data
 from src.collector import get_connections
 from src.enrichment import enrich, enrich_dns, display_process_path
 from src.delete_old_logs import delete_old_logs
 from tqdm import tqdm
+from pathlib import Path
+
 
 from src.risk_scorer import score_risk
 from src.data_transfer_tracker import create_tracker
@@ -17,6 +20,20 @@ def load_json(path: str) -> dict:
 
 
 def main():
+    ## --- create log folder if it doesn't exist ---
+    log_path = Path.home() / "netscan_results"
+
+    if (not log_path.is_dir()) and (log_path.exists()): #if there is a non-directory file in the way of netscan_results
+        print("Error: Couldn't create log folder (~/netscan_results)")
+        return -1
+        
+    if not log_path.exists(): #if the log directory doesn't exist (eg. first run of this program)
+        #Otherwise, create the ~/netscan_results directory
+        log_path.mkdir()
+        print("creating " + str(log_path))
+        os.system(f'attrib +h "{log_path}"')
+
+    
     ## --- delete expired logs (over 1 month old)---
     delete_old_logs()
     
