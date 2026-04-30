@@ -2,9 +2,11 @@ from datetime import datetime
 from pathlib import Path
 
 
-def generate_report(results: list[dict], output_dir: str = ".") -> str:
+def generate_report(results: list[dict], output_dir: str = "reports") -> str:
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    filename = Path(output_dir) / f"report-{timestamp}.md"
+    output_path = Path(output_dir)
+    output_path.mkdir(exist_ok=True)
+    filename = output_path / f"report-{timestamp}.md"
 
     high_risk = [r for r in results if r.get("label") in ("HIGH", "CRITICAL")]
 
