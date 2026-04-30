@@ -116,8 +116,5 @@ def main():
                 f"Details: {e}"
             )
 
-    # TODO: write report.html in the next sprint
-
-
 if __name__ == "__main__":
     main()
