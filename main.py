@@ -3,10 +3,12 @@ import json
 from src.encryption import load_key, encrypt_data
 from src.collector import get_connections
 from src.enrichment import enrich, enrich_dns, display_process_path
-from tqdm import tqdm
-
+from src.delete_old_logs import delete_old_logs
 from src.risk_scorer import score_risk
 from src.report import generate_report
+from src.data_transfer_tracker import create_tracker
+from tqdm import tqdm
+
 # TODO: from src.summary import generate_summary
 
 
@@ -16,6 +18,9 @@ def load_json(path: str) -> dict:
 
 
 def main():
+    ## --- delete expired logs (over 1 month old)---
+    delete_old_logs()
+    
     # --- encryption initialization ---
     # If this fails, we skip writing the encrypted log file.
     encryption_ok = True
@@ -79,6 +84,21 @@ def main():
     # --- report ---
     report_path = generate_report(results)
     print(f"\nReport saved to {report_path}")
+    # --- (FR8) Per-Process Data Transfer Tracking ---
+    try:
+        tracker = create_tracker()
+        process_transfer_stats = tracker.aggregate_by_connections(results)
+        print(tracker.display_transfer_summary(process_transfer_stats, sort_by='total_bytes'))
+        
+        # Display top 10 processes by total bytes transferred
+        top_processes = tracker.get_top_processes(process_transfer_stats, limit=10, sort_by='total_bytes')
+        if top_processes:
+            print("\nTOP 10 PROCESSES BY TOTAL DATA TRANSFER:")
+            print("-" * 50)
+            for idx, (process_name, data) in enumerate(top_processes, 1):
+                print(f"{idx:2d}. {process_name:<30} {data['total_bytes']:>12,} bytes")
+    except Exception as e:
+        print(f"Warning: Could not generate data transfer summary: {e}\n")
 
     # --- (FR17)process path lookup (optional interactive feature) ---
     print("\n" + "="*80)
