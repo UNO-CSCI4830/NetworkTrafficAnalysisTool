@@ -64,11 +64,16 @@ def get_connections(kind: str = "inet") -> list[dict]:
         # --- process info ---
         pid          = conn.pid
         process_name = pid_to_name.get(pid, "unknown") if pid is not None else "unknown"
+        try: #it will crash if it targets a process with pid 0.
+            process_path = psutil.Process(pid).exe() if pid is not None else "unknown"
+        except:
+            process_path = "unknown"
 
         connections.append(
             {
                 "pid":          pid,
                 "process_name": process_name,
+                "process_path": process_path,
                 "local_ip":     local_ip,
                 "local_port":   local_port,
                 "remote_ip":    remote_ip,
@@ -115,5 +120,6 @@ def write_logs_to_file(conns):
 
 if __name__ == "__main__":
     conns = get_connections(kind="inet")
+    print(conns)
     print(f"Found {len(conns)} active connection(s).\n")
     write_logs_to_file(conns)

@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 import json
 from ipwhois import IPWhois
+import hashlib
 
 
 def enrich(connection: dict, known_ports: dict, known_processes: dict) -> dict:
@@ -15,6 +16,7 @@ def enrich(connection: dict, known_ports: dict, known_processes: dict) -> dict:
         process_known        - True if the process is in the whitelist
         process_description  - description of the process, or None if unknown
         port_mismatch        - True if a known process is using an unexpected port
+        executable sha256sum - sha256 hash for executable responsible for connection
     """
     result = dict(connection)
 
@@ -27,6 +29,15 @@ def enrich(connection: dict, known_ports: dict, known_processes: dict) -> dict:
     result["service_name"]    = port_info.get("service", "Unknown")
     result["port_suspicious"] = port_info.get("suspicious", False)
 
+    # --- sha256 executable_sum ---
+    try:
+        with open(result["process_path"], 'rb') as exe:
+            digest = hashlib.file_digest(exe, "sha256")
+            #print(digest.hexdigest())
+    except:
+        digest = None
+    
+
     # --- process enrichment ---
     proc_info = known_processes.get(process_name)
     if proc_info:
@@ -36,6 +47,7 @@ def enrich(connection: dict, known_ports: dict, known_processes: dict) -> dict:
         result["port_mismatch"]       = (
             remote_port is not None and remote_port not in expected_ports
         )
+        result["executable_sha256"] = digest.hexdigest()
     else:
         result["process_known"]       = False
         result["process_description"] = None

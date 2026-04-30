@@ -38,7 +38,7 @@ def main():
     # --- pipeline ---
     results = []
     for conn in connections:
-        # step 1: port + process enrichment
+        # step 1: port + process enrichment 
         conn = enrich(conn, known_ports, known_processes)
         
         # step 2: dns enrichment
@@ -67,6 +67,7 @@ def main():
             f"org={r.get('dns_owner', 'unknown')}"
             f"{' ⚠' if r.get('port_suspicious') else ''}"
             f"{' ?' if not r.get('process_known') else ''}"
+            f"{' sha256: ' + r.get('executable_sha256') if r.get('executable_sha256') else None}" 
         )
 
 
