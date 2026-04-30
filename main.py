@@ -5,12 +5,12 @@ from src.encryption import load_key, encrypt_data
 from src.collector import get_connections
 from src.enrichment import enrich, enrich_dns, display_process_path
 from src.delete_old_logs import delete_old_logs
-from tqdm import tqdm
-from pathlib import Path
-
-
 from src.risk_scorer import score_risk
+from src.report import generate_report
 from src.data_transfer_tracker import create_tracker
+from tqdm import tqdm
+
+
 # TODO: from src.summary import generate_summary
 
 
@@ -97,6 +97,9 @@ def main():
             f"{' sha256: ' + r.get('executable_sha256') if r.get('executable_sha256') else None}"
         )
 
+    # --- report ---
+    report_path = generate_report(results)
+    print(f"\nReport saved to {report_path}")
     # --- (FR8) Per-Process Data Transfer Tracking ---
     try:
         tracker = create_tracker()
@@ -148,9 +151,6 @@ def main():
                 "\nERROR: Could not encrypt/save logs. Skipping log write.\n"
                 f"Details: {e}"
             )
-
-    # TODO: write report.html in the next sprint
-
 
 if __name__ == "__main__":
     main()
