@@ -10,6 +10,7 @@ from src.report import generate_report
 from src.data_transfer_tracker import create_tracker
 from tqdm import tqdm
 from pathlib import Path
+import src.helpTab as helptab
 
 # TODO: from src.summary import generate_summary
 
@@ -122,9 +123,14 @@ def main():
     print("="*80)
     while True:
         try:
-            user_input = input("\nEnter process name or 'quit' to exit: ").strip()
+            user_input = input("\nEnter process name or 'quit' to exit, for help type 'help': ").strip()
             if user_input.lower() == 'quit':
                 break
+            
+            #Check for help tab
+            if user_input.lower() == 'help':
+                helptab.createPopupHelpWindow()
+                
             
             matching = [r for r in results if user_input.lower() in r['process_name'].lower()]
             if matching:
