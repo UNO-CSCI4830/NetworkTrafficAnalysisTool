@@ -1,0 +1,15 @@
+{
+  "weights": {
+    "unknown_process": 20,
+    "lolbin": 30,
+    "masquerading": 35,
+    "port_mismatch": 20,
+    "port_suspicious": 25,
+    "unknown_path": 10
+  },
+  "thresholds": {
+    "low_max": 24,
+    "medium_max": 49,
+    "high_max": 74
+  }
+}

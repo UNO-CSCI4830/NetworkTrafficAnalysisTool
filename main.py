@@ -97,7 +97,9 @@ def main():
             f"{' ?' if not r.get('process_known') else ''}"
             f"{' sha256: ' + r.get('executable_sha256') if r.get('executable_sha256') else None}"
         )
-
+        if r.get('mitre_techniques'):
+            mitre_ids = ', '.join(t['id'] for t in r['mitre_techniques'])
+            print(f"           MITRE: {mitre_ids} | Vectors: {', '.join(r.get('attack_vectors', []))}")
     # --- report ---
     report_path = generate_report(results)
     print(f"\nReport saved to {report_path}")
