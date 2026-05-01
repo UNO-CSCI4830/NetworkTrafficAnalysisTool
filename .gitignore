@@ -1,20 +1,4 @@
-# Env / secrets
 .env
-
-# Python
-__pycache__/
-*.pyc
-
-# Virtual env
-.venv/
-
-# Generated outputs
-reports/
+*/__pycache__
 logs.enc
-
-# VS Code (optional)
-.vscode/
-
-# OS junk
-.DS_Store
-Thumbs.db
+reports/
